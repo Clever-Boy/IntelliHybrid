@@ -43,7 +43,7 @@ IntelliHybrid bridges the gap between your on-premise data center and AWS cloud 
 
 ```
 ┌─────────────────────────────────┐         ┌──────────────────────────────────┐
-│         ON-PREMISE              │         │           AWS CLOUD               │
+│         ON-PREMISE              │         │           AWS CLOUD              │
 │                                 │         │                                  │
 │  ┌─────────────┐                │◄───────►│  ┌──────────────────┐            │
 │  │  Your DB    │                │  VPN /  │  │   DynamoDB       │            │
