@@ -18,9 +18,9 @@ os.environ.setdefault("AWS_ACCOUNT_ID", "000000000000")
 os.environ.setdefault("DB_USER", "testuser")
 os.environ.setdefault("DB_PASSWORD", "testpassword")
 
-from src.core.config_loader import HybridConfig, AWSConfig, OnPremConfig
-from src.core.config_loader import DatabaseConfig, VPNConfig, DynamoDBConfig, DynamoTableConfig
-from src.aws.dynamodb import DynamoDBManager
+from intellihybrid.core.config_loader import HybridConfig, AWSConfig, OnPremConfig
+from intellihybrid.core.config_loader import DatabaseConfig, VPNConfig, DynamoDBConfig, DynamoTableConfig
+from intellihybrid.aws.dynamodb import DynamoDBManager
 from decimal import Decimal
 
 

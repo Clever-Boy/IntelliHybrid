@@ -78,7 +78,7 @@ def config_file(tmp_path):
 
 class TestConfigLoader:
     def test_loads_successfully(self, config_file):
-        from src.core.config_loader import ConfigLoader
+        from intellihybrid.core.config_loader import ConfigLoader
         cfg = ConfigLoader(config_file).load()
         assert cfg.aws.region == "us-east-1"
         assert cfg.onprem.database.type == "mysql"
@@ -86,7 +86,7 @@ class TestConfigLoader:
         assert len(cfg.dynamodb.tables) == 2
 
     def test_resolves_env_vars(self, tmp_path):
-        from src.core.config_loader import ConfigLoader
+        from intellihybrid.core.config_loader import ConfigLoader
         os.environ["TEST_SECRET"] = "resolved_value"
         raw = dict(SAMPLE_CONFIG)
         raw["aws"] = dict(raw["aws"])
@@ -99,7 +99,7 @@ class TestConfigLoader:
         del os.environ["TEST_SECRET"]
 
     def test_raises_on_missing_env_var(self, tmp_path):
-        from src.core.config_loader import ConfigLoader
+        from intellihybrid.core.config_loader import ConfigLoader
         raw = dict(SAMPLE_CONFIG)
         raw["aws"] = dict(raw["aws"])
         raw["aws"]["access_key_id"] = "${NONEXISTENT_VAR_12345}"
@@ -110,7 +110,7 @@ class TestConfigLoader:
             ConfigLoader(str(path)).load()
 
     def test_invalid_db_type_raises(self, tmp_path):
-        from src.core.config_loader import ConfigLoader
+        from intellihybrid.core.config_loader import ConfigLoader
         raw = dict(SAMPLE_CONFIG)
         raw["onprem"] = dict(raw["onprem"])
         raw["onprem"]["database"] = dict(raw["onprem"]["database"])
@@ -122,12 +122,12 @@ class TestConfigLoader:
             ConfigLoader(str(path)).load()
 
     def test_file_not_found(self):
-        from src.core.config_loader import ConfigLoader
+        from intellihybrid.core.config_loader import ConfigLoader
         with pytest.raises(FileNotFoundError):
             ConfigLoader("/nonexistent/path/config.yaml").load()
 
     def test_table_partition_key_validated(self, tmp_path):
-        from src.core.config_loader import ConfigLoader
+        from intellihybrid.core.config_loader import ConfigLoader
         raw = dict(SAMPLE_CONFIG)
         raw["dynamodb"] = {
             "tables": [{
@@ -165,8 +165,8 @@ class TestDynamoDBManager:
         except ImportError:
             pytest.skip("moto not installed")
 
-        from src.core.config_loader import ConfigLoader
-        from src.aws.dynamodb import DynamoDBManager
+        from intellihybrid.core.config_loader import ConfigLoader
+        from intellihybrid.aws.dynamodb import DynamoDBManager
 
         with mock_aws():
             cfg = ConfigLoader(config_file).load()
@@ -181,8 +181,8 @@ class TestDynamoDBManager:
         except ImportError:
             pytest.skip("moto not installed")
 
-        from src.core.config_loader import ConfigLoader
-        from src.aws.dynamodb import DynamoDBManager
+        from intellihybrid.core.config_loader import ConfigLoader
+        from intellihybrid.aws.dynamodb import DynamoDBManager
 
         with mock_aws():
             cfg = ConfigLoader(config_file).load()
@@ -197,8 +197,8 @@ class TestDynamoDBManager:
         except ImportError:
             pytest.skip("moto not installed")
 
-        from src.core.config_loader import ConfigLoader
-        from src.aws.dynamodb import DynamoDBManager
+        from intellihybrid.core.config_loader import ConfigLoader
+        from intellihybrid.aws.dynamodb import DynamoDBManager
 
         with mock_aws():
             cfg = ConfigLoader(config_file).load()
@@ -218,8 +218,8 @@ class TestDynamoDBManager:
         except ImportError:
             pytest.skip("moto not installed")
 
-        from src.core.config_loader import ConfigLoader
-        from src.aws.dynamodb import DynamoDBManager
+        from intellihybrid.core.config_loader import ConfigLoader
+        from intellihybrid.aws.dynamodb import DynamoDBManager
 
         with mock_aws():
             cfg = ConfigLoader(config_file).load()
@@ -237,31 +237,31 @@ class TestDynamoDBManager:
 
 class TestSerialization:
     def test_float_to_decimal(self):
-        from src.bridge.sync import _serialize_for_dynamo
+        from intellihybrid.bridge.sync import _serialize_for_dynamo
         result = _serialize_for_dynamo({"price": 9.99})
         assert isinstance(result["price"], Decimal)
         assert result["price"] == Decimal("9.99")
 
     def test_nested_dict(self):
-        from src.bridge.sync import _serialize_for_dynamo
+        from intellihybrid.bridge.sync import _serialize_for_dynamo
         result = _serialize_for_dynamo({"outer": {"inner": 1.5}})
         assert isinstance(result["outer"]["inner"], Decimal)
 
     def test_list_items(self):
-        from src.bridge.sync import _serialize_for_dynamo
+        from intellihybrid.bridge.sync import _serialize_for_dynamo
         result = _serialize_for_dynamo([1.1, 2.2, "hello"])
         assert isinstance(result[0], Decimal)
         assert result[2] == "hello"
 
     def test_row_fingerprint_deterministic(self):
-        from src.bridge.sync import _row_fingerprint
+        from intellihybrid.bridge.sync import _row_fingerprint
         row = {"id": 1, "name": "Alice", "value": 42.5}
         fp1 = _row_fingerprint(row)
         fp2 = _row_fingerprint(row)
         assert fp1 == fp2
 
     def test_row_fingerprint_changes_on_mutation(self):
-        from src.bridge.sync import _row_fingerprint
+        from intellihybrid.bridge.sync import _row_fingerprint
         row1 = {"id": 1, "name": "Alice"}
         row2 = {"id": 1, "name": "Bob"}
         assert _row_fingerprint(row1) != _row_fingerprint(row2)

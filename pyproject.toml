@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "intellihybrid"
@@ -64,16 +64,16 @@ Issues = "https://github.com/Clever-Boy/IntelliHybrid/issues"
 Zenodo = "https://doi.org/10.5281/zenodo.19121004"
 
 [project.scripts]
-intellihybrid = "intellihybrid:main"
+intellihybrid = "intellihybrid.cli:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["src*"]
+where = ["src"]
+include = ["intellihybrid*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v"
 
 [tool.coverage.run]
-source = ["src"]
+source = ["src/intellihybrid"]
 omit = ["tests/*", "examples/*"]
